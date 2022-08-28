@@ -1,5 +1,8 @@
 /* ///////////////////////////////// */
 // GAME ELEMENTS
+// Accesses and provides access to elements from the DOM
+// 1. Get the play-squares from the DOM
+// 2. Get play-squares by the "id" defined in HTML
 /* ///////////////////////////////// */
 
 const gameElements = (function () {
@@ -22,6 +25,12 @@ const gameElements = (function () {
 
 /* ///////////////////////////////// */
 // GAMEBOARD
+// Manages data of play squares and checks wins
+// 1. Set values of play squares
+// 2. Get values of play squares
+// 3. Clear values of play squares
+// 4. Get number of play squares filled
+// 5. Check if a win occurs
 /* ///////////////////////////////// */
 
 const gameBoard = (function () {
@@ -120,6 +129,9 @@ const gameBoard = (function () {
 
 /* ///////////////////////////////// */
 // PLAYER
+// Player factory function
+// 1. Create a player with a number and a unique mark
+// 2. Make the player's mark in a play square
 /* ///////////////////////////////// */
 
 const Player = (number, mark) => {
@@ -136,6 +148,9 @@ const Player = (number, mark) => {
 
 /* ///////////////////////////////// */
 // DISPLAY
+// Helps with general display of the game
+// 1. Clears gameboard after win
+// 2. Displays win / tie
 /* ///////////////////////////////// */
 
 const displayController = (function () {
@@ -147,18 +162,6 @@ const displayController = (function () {
     });
   };
 
-  // const renderContents = (contents) => {
-  //   const playSquares = gameElements.getPlaySquares();
-
-  //   let i = 0;
-  //   playSquares.forEach((playSquare) => {
-  //     if (contents[i] === "x" || contents[i] === "o") {
-  //       playSquare.textContent = contents[i];
-  //     }
-  //     i++;
-  //   });
-  // };
-
   const displayWinner = (result) => {
     if (result === null) {
       console.log("It's a tie!");
@@ -169,13 +172,20 @@ const displayController = (function () {
 
   return {
     clearGameBoard,
-    // renderContents,
     displayWinner,
   };
 })();
 
 /* ///////////////////////////////// */
 // GAME
+// Controls overall game flow
+// 1. Creates player objects
+// 2. Manipulates play squares with player marks
+// while keeping track of (alternate) clicks
+// 3. Checks if a win happens and handles it by calling
+// for an endGame
+// 4. Adds and removes event listeners on startGame
+// and endGame
 /* ///////////////////////////////// */
 
 const game = (function () {
@@ -206,7 +216,8 @@ const game = (function () {
     let triplet = gameBoard.isTriplet();
     if (triplet) {
       console.log("Triplet: ", triplet);
-      game.endGame(gameElements.getPlaySquare(triplet[0]).textContent);
+      let mark = gameElements.getPlaySquare(triplet[0]).textContent;
+      game.endGame(mark);
     } else if (!triplet && gameBoard.getContentsLength() === 9) {
       console.log("NULL Triplet: ", triplet);
       game.endGame(null);
@@ -252,6 +263,3 @@ const game = (function () {
 })();
 
 game.startGame();
-
-// console.log(gameBoard, gameBoard.getContents());
-// displayController.renderContents(gameBoard.getContents());
