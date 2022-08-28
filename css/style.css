@@ -28,7 +28,7 @@ body {
   background-color: black;
 }
 
-.play-space {
+.play-square {
   font-size: 3em;
   font-weight: bold;
   text-transform: capitalize;
@@ -38,6 +38,11 @@ body {
   width: 100%;
 
   background-color: white;
+}
+
+.play-square:hover {
+  cursor: pointer;
+  opacity: 0.97;
 }
 
 /* .play-space:nth-child(2) {
