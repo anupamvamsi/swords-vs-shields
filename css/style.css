@@ -8,16 +8,37 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* ///////////////////////////////// */
+/* CONTAINER */
+/* ///////////////////////////////// */
 .container {
   display: grid;
   justify-content: center;
   justify-items: center;
 }
 
+/* ///////////////////////////////// */
+/* CONTENTS */
+/* ///////////////////////////////// */
 .title {
+  font-size: 2em;
+
+  text-align: center;
+
+  margin-bottom: 0;
+
   color: darkcyan;
 }
 
+.legend {
+  font-size: 1em;
+  font-weight: bold;
+  color: rgb(5, 161, 161);
+}
+
+/* ///////////////////////////////// */
+/* GAMEBOARD */
+/* ///////////////////////////////// */
 .gameboard {
   display: grid;
   grid-template-columns: repeat(3, minmax(200px, 0.6fr));
@@ -25,7 +46,10 @@ body {
 
   gap: 0.4em;
 
-  background-color: black;
+  border: 1em solid darkcyan;
+  border-radius: 0em;
+
+  background-color: darkcyan;
 }
 
 .play-square {
@@ -37,7 +61,22 @@ body {
   padding: 1.5em;
   width: 100%;
 
+  border-radius: 3.5em;
+
   background-color: white;
+}
+
+.play-square:first-child {
+  border-top-left-radius: 0em;
+}
+.play-square:nth-child(3) {
+  border-top-right-radius: 0em;
+}
+.play-square:nth-child(7) {
+  border-bottom-left-radius: 0em;
+}
+.play-square:last-child {
+  border-bottom-right-radius: 0em;
 }
 
 .play-square:hover {
@@ -45,25 +84,86 @@ body {
   opacity: 0.97;
 }
 
-/* .play-space:nth-child(2) {
-  border: 0.1em solid black;
-  border-top: none;
+/* ///////////////////////////////// */
+/* MARKS */
+/* ///////////////////////////////// */
+.swords {
+  color: rgb(204, 255, 238);
+  color: darkcyan;
+
+  background-color: turquoise;
+}
+.swords:first-child {
+  border-top-left-radius: 0em;
+}
+.swords:nth-child(3) {
+  border-top-right-radius: 0em;
+}
+.swords:nth-child(7) {
+  border-bottom-left-radius: 0em;
+}
+.swords:last-child {
+  border-bottom-right-radius: 0em;
 }
 
-.play-space:nth-child(4) {
-  border: 0.1em solid black;
-  border-left: none;
+.shields {
+  color: rgb(3, 199, 179);
+  color: darkcyan;
+
+  background-color: aquamarine;
+}
+.shields:first-child {
+  border-top-left-radius: 0em;
+}
+.shields:nth-child(3) {
+  border-top-right-radius: 0em;
+}
+.shields:nth-child(7) {
+  border-bottom-left-radius: 0em;
+}
+.shields:last-child {
+  border-bottom-right-radius: 0em;
 }
 
-.play-space:nth-child(5) {
+/* ///////////////////////////////// */
+/* DECLARATION OF RESULT */
+/* ///////////////////////////////// */
+.declaration {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: darkcyan;
+
+  text-align: center;
+
+  margin: 1.5em 0;
+
+  width: 60%;
 }
 
-.play-space:nth-child(6) {
-  border: 0.1em solid black;
-  border-right: none;
+.winning-square {
+  color: black;
+  background-color: gold;
 }
 
-.play-space:nth-child(8) {
-  border: 0.1em solid black;
-  border-bottom: none;
-} */
+.hidden {
+  visibility: hidden;
+}
+
+.restart {
+  color: white;
+
+  padding: 0.8em 0em 0.4em 0em;
+  width: 6em;
+  height: 6em;
+
+  border: none;
+  border-radius: 50%;
+
+  background: none;
+  background-color: darkcyan;
+}
+
+.restart:hover {
+  cursor: pointer;
+  opacity: 0.9;
+}
