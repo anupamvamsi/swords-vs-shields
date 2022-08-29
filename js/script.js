@@ -204,11 +204,9 @@ const displayController = (function () {
 
   const displayDeclaration = (result) => {
     if (result === null) {
-      console.log("It's a tie!");
       gameElements.getDeclarationElement().textContent =
         "Winner: None! The beseiged Shields could not push back against the equally matched Swords' assault...";
     } else {
-      console.log(`Player ${result} wins!`);
       if (result === 1) {
         gameElements.getDeclarationElement().textContent =
           "Winner: The Swords! They have successfully and brutally massacred the mighty defense of the Shields!";
@@ -278,11 +276,9 @@ const game = (function () {
 
     let triplet = gameBoard.isTriplet();
     if (triplet) {
-      console.log("Triplet: ", triplet);
       let mark = gameElements.getPlaySquare(triplet[0]).textContent;
       game.endGame(mark, triplet);
     } else if (!triplet && gameBoard.getContentsLength() === 9) {
-      console.log("NULL Triplet: ", triplet);
       game.endGame(null, triplet);
     }
   };
