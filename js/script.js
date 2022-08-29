@@ -1,12 +1,29 @@
 /* ///////////////////////////////// */
 // GAME ELEMENTS
 // Accesses and provides access to elements from the DOM
-// 1. Get the play-squares from the DOM
+// 1. Get the play-squares, delcaration element, restart button from the DOM
 // 2. Get play-squares by the "id" defined in HTML
 /* ///////////////////////////////// */
 
 const gameElements = (function () {
+  // Create Play Squares to make the marks in
+  const _createPlaySquares = function () {
+    const gameboard = document.querySelector(".gameboard");
+
+    for (let i = 0; i < 9; i++) {
+      let _playSquare = document.createElement("div");
+      _playSquare.id = `${i}`;
+      _playSquare.classList.add("play-square");
+      gameboard.appendChild(_playSquare);
+    }
+  };
+
+  _createPlaySquares();
+
+  // Query elements for get methods
   const _playSquares = document.querySelectorAll(".play-square");
+  const _declElement = document.querySelector(".declaration");
+  const _restartBtn = document.querySelector(".restart");
 
   const getPlaySquare = (squareID) => {
     let _playSquare = document.getElementById(squareID);
@@ -17,9 +34,19 @@ const gameElements = (function () {
     return _playSquares;
   };
 
+  const getDeclarationElement = () => {
+    return _declElement;
+  };
+
+  const getRestartButton = () => {
+    return _restartBtn;
+  };
+
   return {
     getPlaySquare,
     getPlaySquares,
+    getDeclarationElement,
+    getRestartButton,
   };
 })();
 
@@ -34,6 +61,7 @@ const gameElements = (function () {
 /* ///////////////////////////////// */
 
 const gameBoard = (function () {
+  // Contains the marks of each play area
   let _contents = {};
 
   const getContents = () => {
@@ -52,6 +80,8 @@ const gameBoard = (function () {
     return Object.keys(_contents).length;
   };
 
+  // Checks if a triad / triplet has occurred for a win
+  // Array returned implies true, else default is false.
   const isTriplet = () => {
     if (
       _contents[0] !== undefined &&
@@ -154,25 +184,55 @@ const Player = (number, mark) => {
 /* ///////////////////////////////// */
 
 const displayController = (function () {
-  const clearGameBoard = (contents) => {
+  const clearGameBoard = () => {
     const playSquares = gameElements.getPlaySquares();
 
+    // Remove both the content and the styling
     playSquares.forEach((playSquare) => {
       playSquare.textContent = "";
+      playSquare.classList.remove("swords");
+      playSquare.classList.remove("shields");
+      playSquare.classList.remove("winning-square");
     });
   };
 
-  const displayWinner = (result) => {
+  const markWinTrio = (triplet) => {
+    for (let i = 0; i < triplet.length; i++) {
+      gameElements.getPlaySquare(triplet[i]).classList.add("winning-square");
+    }
+  };
+
+  const displayDeclaration = (result) => {
     if (result === null) {
       console.log("It's a tie!");
+      gameElements.getDeclarationElement().textContent =
+        "Winner: None! The beseiged Shields could not push back against the equally matched Swords' assault...";
     } else {
       console.log(`Player ${result} wins!`);
+      if (result === 1) {
+        gameElements.getDeclarationElement().textContent =
+          "Winner: The Swords! They have successfully and brutally massacred the mighty defense of the Shields!";
+      } else {
+        gameElements.getDeclarationElement().textContent =
+          "Winner: The Shields! They have once again proved that the greatest offense is a mighty defense, as exemplified by them!";
+      }
     }
+
+    // Make it visible
+    gameElements.getDeclarationElement().classList.remove("hidden");
+  };
+
+  const clearDeclaration = () => {
+    gameElements.getDeclarationElement().textContent =
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A ab atque         perspiciatis saepe, repudiandae consectetur totam vel cupiditate          accusantium quibusdam quis maxime cum, officiis eligendi. Magni sint voluptatum labore sit.";
+    gameElements.getDeclarationElement().classList.add("hidden");
   };
 
   return {
     clearGameBoard,
-    displayWinner,
+    markWinTrio,
+    displayDeclaration,
+    clearDeclaration,
   };
 })();
 
@@ -193,6 +253,7 @@ const game = (function () {
   const _player2 = Player(2, "o");
 
   const _playSquares = gameElements.getPlaySquares();
+  const _restartBtn = gameElements.getRestartButton();
 
   let _clickCounter = 0;
   const _playerClick = (e) => {
@@ -207,9 +268,11 @@ const game = (function () {
 
     if (_clickCounter % 2 === 1 && _playSquareContent != _player2.mark) {
       _player1.markSquare(_player1, _playSquare);
+      _playSquare.classList.add("swords");
       gameBoard.setContents(Number(_playSquareID), _playSquare.textContent);
     } else if (_playSquareContent != _player1.mark) {
       _player2.markSquare(_player2, _playSquare);
+      _playSquare.classList.add("shields");
       gameBoard.setContents(Number(_playSquareID), _playSquare.textContent);
     }
 
@@ -217,17 +280,17 @@ const game = (function () {
     if (triplet) {
       console.log("Triplet: ", triplet);
       let mark = gameElements.getPlaySquare(triplet[0]).textContent;
-      game.endGame(mark);
+      game.endGame(mark, triplet);
     } else if (!triplet && gameBoard.getContentsLength() === 9) {
       console.log("NULL Triplet: ", triplet);
-      game.endGame(null);
+      game.endGame(null, triplet);
     }
   };
 
   const startGame = () => {
     gameBoard.clearContents();
     displayController.clearGameBoard();
-    // displayController.clearWinner();
+    displayController.clearDeclaration();
 
     _clickCounter = 0;
 
@@ -235,9 +298,11 @@ const game = (function () {
     _playSquares.forEach((_playSquare) =>
       _playSquare.addEventListener("click", _playerClick)
     );
+
+    _restartBtn.addEventListener("click", startGame);
   };
 
-  const endGame = (mark) => {
+  const endGame = (mark, triplet) => {
     let _winningPlayer;
 
     if (mark === null) {
@@ -248,7 +313,8 @@ const game = (function () {
       _winningPlayer = _player2.number;
     }
 
-    displayController.displayWinner(_winningPlayer);
+    displayController.markWinTrio(triplet);
+    displayController.displayDeclaration(_winningPlayer);
 
     // Remove event listeners
     _playSquares.forEach((_playSquare) =>
